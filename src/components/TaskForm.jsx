@@ -7,12 +7,28 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Divider,
-  MenuItem,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import GeneralSelect from "./GeneralSelect/GeneralSelect";
+
+const CATEGORIES = [
+  { value: "work", label: "Work" },
+  { value: "personal", label: "Personal" },
+  { value: "home", label: "Home" },
+  { value: "health and fitness", label: "Health and Fitness" },
+  { value: "financial", label: "Financial" },
+  { value: "social", label: "Social" },
+  { value: "learning", label: "Learning" },
+  { value: "miscellaneous", label: "Miscellaneous" },
+];
+
+const PRIORITIES = [
+    { value: "low", label: "Low" },
+    { value: "medium", label: "Medium" },
+    { value: "high", label: "High" },
+  ];
 
 const TaskForm = ({ onAddTask }) => {
   const [taskName, setTaskName] = useState("");
@@ -22,17 +38,6 @@ const TaskForm = ({ onAddTask }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [priority, setPriority] = useState("");
 
-  const categories = [
-    "Work",
-    "Personal",
-    "Home",
-    "Health and Fitness",
-    "Financial",
-    "Social",
-    "Learning",
-    "Miscellaneous",
-  ];
-  const priorities = ["Low", "Medium", "High"];
 
   const handlePriorityChange = (event) => {
     setPriority(event.target.value);
@@ -95,22 +100,19 @@ const TaskForm = ({ onAddTask }) => {
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add New Task</DialogTitle>
-        <DialogContent>
-          <Divider style={{ marginTop: "1rem" }} />
+        <DialogContent sx={{ display:"flex", flexDirection:"column", rowGap:'16px' }}>
           <TextField
             fullWidth
             label="Task Name"
             value={taskName}
             onChange={handleTaskNameChange}
           />
-          <Divider style={{ marginTop: "1rem" }} />
           <TextField
             fullWidth
             label="Description"
             value={description}
             onChange={handleDescriptionChange}
           />
-          <Divider style={{ marginTop: "1rem" }} />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Due Date"
@@ -119,35 +121,29 @@ const TaskForm = ({ onAddTask }) => {
               textField={(prop) => <TextField {...prop} />}
             />
           </LocalizationProvider>
-          <Divider style={{ marginTop: "1rem" }} />
-          <TextField
-            select
-            fullWidth
-            label="Category"
-            value={selectedCategory}
+          <GeneralSelect
+          fullWidth
+            items={CATEGORIES}
             onChange={handleCategoryChange}
-          >
-            {categories.map((category) => (
-              <MenuItem key={category} value={category}>
-                {category}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Divider style={{ marginTop: "1rem" }} />
-          <TextField
-            select
-            fullWidth
-            label="Priority"
-            value={priority}
+            value={selectedCategory}
+            label={"Category"}
+            InputLabelProps={{
+                shrink: true,
+              }}
+          />
+
+
+          <GeneralSelect
+          fullWidth
+            items={PRIORITIES}
             onChange={handlePriorityChange}
-          >
-            {priorities.map((priority) => (
-              <MenuItem key={priority} value={priority}>
-                {priority}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Divider style={{ marginTop: "1rem" }} />
+            value={priority}
+            label={'Priority'}
+            InputLabelProps={{
+                shrink: true,
+              }}
+          />
+
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

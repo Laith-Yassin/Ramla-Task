@@ -26,16 +26,16 @@ const EditForm = ({ task, onUpdate, onClose }) => {
   };
 
   const categories = [
-    "Work",
-    "Personal",
-    "Home",
-    "Health and Fitness",
-    "Financial",
-    "Social",
-    "Learning",
-    "Miscellaneous",
+    "work",
+    "personal",
+    "home",
+    "health and fitness",
+    "financial",
+    "social",
+    "learning",
+    "miscellaneous",
   ];
-  const priorities = ["Low", "Medium", "High"];
+  const priorities = ["low", "medium", "high"];
 
   return (
     <Dialog open={true} onClose={onClose}>
