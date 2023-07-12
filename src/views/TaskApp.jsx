@@ -10,6 +10,7 @@ import {
   IconButton,
   TextField,
   Stack,
+  Box,
 } from "@mui/material";
 import TaskForm from "../components/TaskForm";
 import EditForm from "../components/EditForm";
@@ -17,46 +18,50 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { blue, green, grey, lightGreen, red } from "@mui/material/colors";
-import '../css.css'
+import "../css.css";
 import GeneralSelect from "../components/GeneralSelect/GeneralSelect";
 import styled from "@emotion/styled";
 
 const CATEGORIES = [
-    { value: 'all', label: 'All'},
-    { value: 'work', label: 'Work' },
-    { value: 'personal', label: 'Personal' },
-    { value: 'home', label: 'Home' },
-    { value: 'health and fitness', label: 'Health and Fitness' },
-    { value: 'financial', label: 'Financial' },
-    { value: 'social', label: 'Social' },
-    { value: 'learning', label: 'Learning' },
-    { value: 'miscellaneous', label: 'Miscellaneous' }
-  ]
-  
-  const PRIORITIES = [
-    { value: 'all', label: 'All'},
-    { value: 'low', label: 'Low'},
-    { value: 'medium', label: 'Medium'},
-    { value: 'high', label: 'High'},
-  ] 
-  const STATUS = [{
-    value:'all',
-    label: 'All'
-  },{
-    value:'completed',
-    label: 'Completed'
-  },{
-    value:'pending',
-    label: 'Pending'
-  }] ;
+  { value: "all", label: "All" },
+  { value: "work", label: "Work" },
+  { value: "personal", label: "Personal" },
+  { value: "home", label: "Home" },
+  { value: "health and fitness", label: "Health and Fitness" },
+  { value: "financial", label: "Financial" },
+  { value: "social", label: "Social" },
+  { value: "learning", label: "Learning" },
+  { value: "miscellaneous", label: "Miscellaneous" },
+];
+
+const PRIORITIES = [
+  { value: "all", label: "All" },
+  { value: "low", label: "Low" },
+  { value: "medium", label: "Medium" },
+  { value: "high", label: "High" },
+];
+const STATUS = [
+  {
+    value: "all",
+    label: "All",
+  },
+  {
+    value: "completed",
+    label: "Completed",
+  },
+  {
+    value: "pending",
+    label: "Pending",
+  },
+];
 
 const StyledTableCell = styled(TableCell)({
-    textTransform: 'capitalize',
-    minWidth: 100,
-    width: 'auto',
-    padding:'10px',
-    '& .MuiTypography-root':{padding:0},
-})
+  textTransform: "capitalize",
+  minWidth: 100,
+  width: "auto",
+  padding: "10px",
+  "& .MuiTypography-root": { padding: 0 },
+});
 
 const TaskApp = () => {
   const [tasks, setTasks] = useState([]);
@@ -67,13 +72,11 @@ const TaskApp = () => {
   const [priorityFilter, setPriorityFilter] = useState(PRIORITIES[0].value);
   const [searchTerm, setSearchTerm] = useState("");
 
-
-  
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
     setTasks(storedTasks);
   }, []);
-  
+
   const handleAddTask = (newTask) => {
     const updatedTasks = [...tasks, newTask];
     setTasks(updatedTasks);
@@ -141,75 +144,121 @@ const TaskApp = () => {
       return false;
     if (priorityFilter !== "all" && task.priority !== priorityFilter)
       return false;
-    if (searchTerm && !task.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    if (
+      searchTerm &&
+      !task.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
       return false;
     return true;
   });
 
-  
   return (
     <Container maxWidth="md">
       <Typography variant="h4" align="center" gutterBottom>
         Manage Your Task Here
       </Typography>
-      <Stack sx={{ flexDirection:"row", gap:'8px',mb:'32px' }} >
+      <Stack sx={{ flexDirection: "row", gap: "8px", mb: "32px" }}>
+        <GeneralSelect
+          items={STATUS}
+          onChange={handleFilterChange}
+          value={filter}
+          label={"Status"}
+          sx={{ width: 100 }}
+        />
+        <GeneralSelect
+          items={CATEGORIES}
+          onChange={handleCategoryFilterChange}
+          value={categoryFilter}
+          label={"Category"}
+          sx={{ width: 100 }}
+        />
+        <GeneralSelect
+          items={PRIORITIES}
+          onChange={handlePriorityFilterChange}
+          value={priorityFilter}
+          label={"Priorty"}
+          sx={{ width: 100 }}
+        />
 
-      <GeneralSelect items={STATUS} onChange={handleFilterChange} value={filter} label={'Status'} sx={{ width:100 }} />
-      <GeneralSelect items={CATEGORIES} onChange={handleCategoryFilterChange} value={categoryFilter} label={'Category'} sx={{ width:100 }}  />
-      <GeneralSelect items={PRIORITIES} onChange={handlePriorityFilterChange} value={priorityFilter} label={'Priorty'} sx={{ width:100 }}  />
-       
-       
         <TextField
           placeholder="Search"
           variant="outlined"
           value={searchTerm}
           onChange={handleSearchChange}
-          sx={{ flexGrow:1,'& .MuiInputBase-input':{padding:'8px 16px'}, justifyContent:'center' }}
+          sx={{
+            flexGrow: 1,
+            "& .MuiInputBase-input": { padding: "8px 16px" },
+            justifyContent: "center",
+          }}
         />
-        
-        <TaskForm onAddTask={handleAddTask}  />
 
+        <TaskForm onAddTask={handleAddTask} />
       </Stack>
       <Table>
         <TableHead>
           <TableRow>
-            <StyledTableCell  sx={{ fontWeight: 'bold' }}>Name</StyledTableCell>
-            <StyledTableCell  sx={{ fontWeight: 'bold' }}>Description</StyledTableCell>
-            <StyledTableCell  align="center" sx={{ fontWeight: 'bold' }}>
+            <StyledTableCell sx={{ fontWeight: "bold" }}>Name</StyledTableCell>
+            <StyledTableCell sx={{ fontWeight: "bold" }}>
+              Description
+            </StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontWeight: "bold" }}>
               Category
             </StyledTableCell>
-            <StyledTableCell  align="center" sx={{ fontWeight: 'bold' }}>
+            <StyledTableCell align="center" sx={{ fontWeight: "bold" }}>
               Priority
             </StyledTableCell>
-            <StyledTableCell  align="center" sx={{ fontWeight: 'bold' }}>
+            <StyledTableCell align="center" sx={{ fontWeight: "bold" }}>
               Due Date
             </StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontWeight: 'bold' }}>Complete</StyledTableCell>
-            <StyledTableCell align="center" sx={{ fontWeight: 'bold' }}>Actions</StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontWeight: "bold" }}>
+              Complete
+            </StyledTableCell>
+            <StyledTableCell align="center" sx={{ fontWeight: "bold" }}>
+              Actions
+            </StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {filteredTasks.map((task) => (
             <TableRow key={task.id}>
-              <StyledTableCell >{task.name}</StyledTableCell>
-              <StyledTableCell >
-                <Typography
-                  variant="body2"
+              <StyledTableCell>{task.name}</StyledTableCell>
+              <StyledTableCell>
+              <div style={{ width: 200, whiteSpace: 'wrap' }}>
+                <Box
                   component="div"
-                  sx={{ whiteSpace: "pre-wrap", p: "16px" }}
+                  sx={{
+                    overflow: "auto",
+                    my: 2,
+                    p: 1,
+                    borderRadius: 2,
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                  }}
                 >
                   {task.description}
-                </Typography>
+                </Box>
+                </div>
               </StyledTableCell>
-              <StyledTableCell  align="center">
-                {task.category}
-              </StyledTableCell>
-              
-              <StyledTableCell  align="center" sx={{ color : grey[50] ,backgroundColor: task.priority === 'low' ? blue[300] : task.priority === 'medium' ? green[300] : task.priority === 'high' ? red[300] : undefined }}>
+              <StyledTableCell align="center">{task.category}</StyledTableCell>
+
+              <StyledTableCell
+                align="center"
+                sx={{
+                  color: grey[50],
+                  backgroundColor:
+                    task.priority === "low"
+                      ? blue[300]
+                      : task.priority === "medium"
+                      ? green[300]
+                      : task.priority === "high"
+                      ? red[300]
+                      : undefined,
+                }}
+              >
                 {task.priority}
               </StyledTableCell>
-              
-              <StyledTableCell  align="center">
+
+              <StyledTableCell align="center">
                 {task.dueDate.toLocaleString()}
               </StyledTableCell>
               <StyledTableCell align="center">
